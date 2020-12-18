@@ -1,0 +1,75 @@
+server:
+  port: 8888
+
+logging:
+  file:
+    path: logs/
+  level:
+    root: info
+
+spring:
+  profiles:
+    active: mysql, dev, swagger
+  servlet:
+    multipart:
+      max-file-size: 2MB
+  main:
+    allow-bean-definition-overriding: true
+  messages:
+    basename:
+    fallback-to-system-locale: false
+  datasource:
+    hikari:
+      minimum-idle: 6
+      maximum-pool-size: 30
+      idle-timeout: 50000
+  jpa:
+    open-in-view: true
+    show-sql: false
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 500
+        order_inserts: true
+        order_updates: true
+      jadira.usertype.autoRegisterUserTypes: true
+    hibernate:
+      naming:
+        implicit-strategy: cn.xinbee.mdrs.data.jpa.config.CustomImplicitNamingStrategy
+      ddl-auto: validate
+      use-new-id-generator-mappings: false
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+      write-dates-as-timestamps: true
+      write_dates_with_zone_id: true
+    time-zone: GMT+8
+    default-property-inclusion: NON_NULL
+    parser:
+      ALLOW_UNQUOTED_CONTROL_CHARS: true
+
+ mail:
+  track:
+    open:
+      path: http://localhost:8889/track/open
+
+---
+spring:
+  datasource:
+    driver-class-name: ${datasource.driver-class-name:com.mysql.cj.jdbc.Driver}
+    url: ${datasource.url:jdbc:mysql://192.168.0.101:3306/xinbee_mdrs?useUnicode=true&characterEncoding=utf-8&useSSL=false}
+    username: ${datasource.username:root}
+    password: ${datasource.password:111111}
+  jpa:
+    database-platform: org.hibernate.dialect.MySQL5Dialect
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    locations: classpath:db/migration/mysql
+    baseline-on-migrate: true
+    enabled: true
+  config:
+    activate:
+      on-profile: mysql
+---
+

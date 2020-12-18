@@ -1,0 +1,23 @@
+
+dependencies {
+    compile project(':xinbee-mdrs-sender')
+
+    compile "org.springframework:spring-messaging"
+    compile "org.springframework:spring-context-support"
+    compile "org.springframework.data:spring-data-jpa"
+    compile "org.hibernate:hibernate-entitymanager"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-hibernate5"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-properties"
+    compile "net.sf.ehcache:ehcache"
+    compile 'com.github.vladimir-bukhtoyarov:bucket4j-core:4.10.0'
+    compile "org.hsqldb:hsqldb"
+    compile "org.jadira.usertype:usertype.core:${usertypeVersion}"
+    compile "joda-time:joda-time"
+    compile "com.fasterxml.jackson.core:jackson-databind"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-joda"
+    compile "com.fasterxml.jackson.dataformat:jackson-dataformat-properties"
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

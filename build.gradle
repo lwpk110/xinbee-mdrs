@@ -1,0 +1,67 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
+plugins {
+    id 'org.springframework.boot' version '2.4.0' apply false
+    id 'org.unbroken-dome.test-sets' version '3.0.1' apply false
+}
+
+//https://github.com/spring-projects/spring-boot/issues/14451
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+}
+
+dependencies {
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+}
+
+
+allprojects {
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.unbroken-dome.test-sets'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+
+    tasks.withType(JavaCompile) { options.encoding = "UTF-8" }
+
+    dependencyManagement {
+        imports {
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+        }
+    }
+
+    repositories {
+
+        mavenLocal()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        mavenCentral()
+        maven { url "http://repo.spring.io/libs-release" }
+    }
+
+    testSets {
+        integrationTest { dirName = 'integration-test' }
+    }
+
+    project.integrationTest {
+        outputs.upToDateWhen { false }
+    }
+
+    check.dependsOn integrationTest
+    integrationTest.mustRunAfter test
+
+    tasks.withType(Test) {
+        reports.html.setDestination(file("${reporting.baseDir}/${name}"))
+    }
+}
+
+
+

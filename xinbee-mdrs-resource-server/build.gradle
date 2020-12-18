@@ -1,0 +1,17 @@
+apply plugin: 'org.springframework.boot'
+
+bootJar {
+    launchScript()
+}
+
+dependencies {
+    compile project(':xinbee-mdrs-rest')
+
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation "org.springframework.boot:spring-boot-configuration-processor"
+    implementation "mysql:mysql-connector-java"
+    implementation 'org.flywaydb:flyway-core'
+
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

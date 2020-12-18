@@ -1,0 +1,6 @@
+info:
+  component: dmx edm Core Service
+
+spring:
+  application:
+    name: xinbee-mdrs
