@@ -7,7 +7,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import org.springframework.boot.autoconfigure.mail.MailProperties;
 import org.springframework.util.StringUtils;
 
 @Entity
@@ -154,16 +153,6 @@ public class MailDeliveryChannel extends AbstractEntity<Integer> {
         public void setQps(Range<Integer> qps) {
             this.qps = qps;
         }
-    }
-
-    public MailProperties toMailProperties() {
-        MailProperties mailProperties = new MailProperties();
-        mailProperties.setPort(this.port);
-        mailProperties.setProtocol(StringUtils.hasText(this.protocol) ? this.protocol : "smtp");
-        mailProperties.setUsername(this.user);
-        mailProperties.setPassword(this.pass);
-        mailProperties.setHost(this.host);
-        return mailProperties;
     }
 
 }

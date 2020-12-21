@@ -17,7 +17,7 @@ public class MailActionController {
     @GetMapping("/{img}")
     public ResponseEntity<Void> receive(
         @PathVariable("img") String trackInf) throws IOException {
-        return ResponseEntity.ok(submit);
+        return ResponseEntity.ok().build();
     }
 
 }
