@@ -1,17 +1,15 @@
 package cn.xinbee.mdrs.data.jpa.domain;
 
 import cn.xinbee.mdrs.data.AbstractEntityAuditable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
+
+import javax.persistence.*;
+
 import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "r_mail_actions")
 public class MailAction extends AbstractEntityAuditable<Long> {
-
-    private String email;
+  private String email;
     private String taskId;
     private String mailingId;
     private String apiUser;
@@ -21,6 +19,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Override
+    @Id
     public Long getId() {
         return super.getId();
     }
@@ -29,6 +28,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
         SENT_SUCCESS, OPEN, CLICK
     }
 
+    @Column(nullable = false)
     public String getEmail() {
         return email;
     }
@@ -36,7 +36,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
     public void setEmail(String email) {
         this.email = email;
     }
-
+    @Column(nullable = false)
     public String getTaskId() {
         return taskId;
     }
@@ -53,6 +53,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
         this.mailingId = mailingId;
     }
 
+    @Column(nullable = false)
     public String getApiUser() {
         return apiUser;
     }
@@ -61,6 +62,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
         this.apiUser = apiUser;
     }
 
+    @Column(nullable = false)
     public ActionStatus getStatus() {
         return status;
     }
@@ -73,6 +75,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
         return actionDate;
     }
 
+    @Column(nullable = false)
     public void setActionDate(DateTime actionDate) {
         this.actionDate = actionDate;
     }

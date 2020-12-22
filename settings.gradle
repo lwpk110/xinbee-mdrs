@@ -1,7 +1,5 @@
 rootProject.name = "xinbee-mdrs"
 include 'xinbee-mdrs-resource-server'
 include 'xinbee-mdrs-core'
-include 'xinbee-mdrs-sender'
 include 'xinbee-mdrs-rest'
-include 'xinbee-mdrs-admin-client'
 

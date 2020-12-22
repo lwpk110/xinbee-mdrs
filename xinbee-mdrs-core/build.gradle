@@ -1,6 +1,5 @@
 
 dependencies {
-    compile project(':xinbee-mdrs-sender')
 
     compile "org.springframework:spring-messaging"
     compile "org.springframework:spring-context-support"

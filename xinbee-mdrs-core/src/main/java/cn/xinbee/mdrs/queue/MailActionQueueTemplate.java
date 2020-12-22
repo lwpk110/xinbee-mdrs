@@ -6,7 +6,7 @@ public interface MailActionQueueTemplate {
 
     void send(Object message);
 
-    Message<?> receive();
+    Message<?> receive(Object prams);
 
     boolean isContains(Object prams);
 
