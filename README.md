@@ -1,3 +1,3 @@
 # xinbee-mdrs
-邮件发送系统
+邮件报告系统
 "# xinbee-mdrs" 
