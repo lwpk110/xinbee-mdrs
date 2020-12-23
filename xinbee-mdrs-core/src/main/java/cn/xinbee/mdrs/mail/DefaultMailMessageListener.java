@@ -30,14 +30,14 @@ public class DefaultMailMessageListener implements MailMessageListener, SmartLif
 		private boolean abortListen = false;
 		private volatile boolean hasMsg = false;
 		private final MailActionQueueTemplate queueTemplate;
-		private final MailActionRepository actionRepository;
+		private final MailActionMessageHandler messageHandler;
 		private final Object consumeMonitor = new Object();
 		ExecutorService executorService = Executors.newFixedThreadPool(4);
 
 		public DefaultMailMessageListener(MailActionQueueTemplate queueTemplate,
-				MailActionRepository actionRepository) {
+				MailActionMessageHandler messageHandler) {
 				this.queueTemplate = queueTemplate;
-				this.actionRepository = actionRepository;
+				this.messageHandler = messageHandler;
 		}
 
 		@Override
@@ -90,10 +90,8 @@ public class DefaultMailMessageListener implements MailMessageListener, SmartLif
 
 		private HandlerResult doHandle(Message<?> message) {
 				MailTopicMessage topicMessage = (MailTopicMessage) message.getPayload();
-				DefaultMailActionMessageHandler handler = new DefaultMailActionMessageHandler(
-						topicMessage, actionRepository);
 				try {
-						return handler.call();
+						return (HandlerResult) messageHandler.handleMessage(topicMessage);
 				} catch (Exception e) {
 						throw new IllegalThreadStateException(
 								"DefaultMailActionMessageHandler 处理异常...");

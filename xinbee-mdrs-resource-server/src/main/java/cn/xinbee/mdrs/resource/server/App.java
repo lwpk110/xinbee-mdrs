@@ -2,7 +2,9 @@ package cn.xinbee.mdrs.resource.server;
 
 import cn.xinbee.mdrs.data.jpa.repository.MailActionRepository;
 import cn.xinbee.mdrs.data.jpa.repository.MailTopicQueueRepository;
+import cn.xinbee.mdrs.mail.DefaultMailActionMessageHandler;
 import cn.xinbee.mdrs.mail.DefaultMailMessageListener;
+import cn.xinbee.mdrs.mail.MailActionMessageHandler;
 import cn.xinbee.mdrs.mail.MailMessageListener;
 import cn.xinbee.mdrs.queue.DataSourceMailActionQueueTemplate;
 import cn.xinbee.mdrs.queue.MailActionQueueTemplate;
@@ -25,36 +27,44 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 public class App {
 
-    public static void main(String[] args) {
-        SpringApplication.run(App.class, args);
-    }
+		public static void main(String[] args) {
+				SpringApplication.run(App.class, args);
+		}
 
-    @Configuration
-    @EnableTransactionManagement
-    @EnableJpaRepositories(basePackages = "cn.xinbee.mdrs.data.jpa.repository")
-    @EnableJpaAuditing
-    @EntityScan(basePackages = "cn.xinbee.mdrs.data.jpa.domain")
-    static class JpaConfig {
+		@Configuration
+		@EnableTransactionManagement
+		@EnableJpaRepositories(basePackages = "cn.xinbee.mdrs.data.jpa.repository")
+		@EnableJpaAuditing
+		@EntityScan(basePackages = "cn.xinbee.mdrs.data.jpa.domain")
+		static class JpaConfig {
 
-    }
+		}
 
-    @Configuration
-    @ComponentScan(basePackageClasses = {EntityService.class})
-    static class ServiceConfig {
+		@Configuration
+		@ComponentScan(basePackageClasses = {EntityService.class})
+		static class ServiceConfig {
 
-    }
+		}
 
-    @Configuration
-    static class MailActionInboundConfig{
-        @Bean
-        public MailActionQueueTemplate mailActionQueueTemplate(MailTopicQueueRepository topicQueueRepository){
-            return new DataSourceMailActionQueueTemplate(topicQueueRepository);
-        }
+		@Configuration
+		static class MailActionInboundConfig {
 
-        @Bean
-        public MailMessageListener mailMessageListener(MailActionQueueTemplate queueTemplate,
-                                                       MailActionRepository actionRepository){
-            return new DefaultMailMessageListener(queueTemplate, actionRepository);
-        }
-    }
+				@Bean
+				public MailActionQueueTemplate mailActionQueueTemplate(
+						MailTopicQueueRepository topicQueueRepository) {
+						return new DataSourceMailActionQueueTemplate(topicQueueRepository);
+				}
+
+				@Bean
+				public MailActionMessageHandler DefaultMailActionMessageHandler(
+						MailActionRepository actionRepository) {
+						return new DefaultMailActionMessageHandler(actionRepository);
+				}
+
+				@Bean
+				public MailMessageListener mailMessageListener(MailActionQueueTemplate queueTemplate,
+						MailActionMessageHandler messageHandler) {
+						return new DefaultMailMessageListener(queueTemplate, messageHandler);
+				}
+		}
 }

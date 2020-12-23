@@ -4,31 +4,26 @@ import cn.xinbee.mdrs.data.jpa.domain.MailAction;
 import cn.xinbee.mdrs.data.jpa.domain.MailAction.ActionStatus;
 import cn.xinbee.mdrs.data.jpa.domain.MailTopicMessage;
 import cn.xinbee.mdrs.data.jpa.repository.MailActionRepository;
-import cn.xinbee.mdrs.mail.DefaultMailActionMessageHandler.HandlerResult;
 import cn.xinbee.mdrs.service.MailMessageServiceImpl.MailOpenActionDto;
 import cn.xinbee.mdrs.service.dto.MailOpenTrackInf;
 import cn.xinbee.mdrs.util.JsonUtils;
 import java.nio.charset.StandardCharsets;
-import java.util.concurrent.Callable;
 import org.joda.time.DateTime;
 import org.springframework.util.Base64Utils;
 
-public class DefaultMailActionMessageHandler implements MailActionMessageHandler,
-		Callable<HandlerResult> {
+public class DefaultMailActionMessageHandler implements MailActionMessageHandler{
 
-		private final MailTopicMessage inboundMsg;
 		private final MailActionRepository actionRepository;
 
 		private final MailActionTransformer mailActionTransformer = new MailActionTransformer();
 
-		DefaultMailActionMessageHandler(MailTopicMessage inboundMsg,
+	public 	DefaultMailActionMessageHandler(
 				MailActionRepository actionRepository) {
-				this.inboundMsg = inboundMsg;
 				this.actionRepository = actionRepository;
 		}
 
 		@Override
-		public void handleMessage(MailTopicMessage msg) {
+		public Object handleMessage(MailTopicMessage msg) {
 				final MailOpenActionDto openActionDto;
 				try {
 						openActionDto = convert(msg);
@@ -36,12 +31,7 @@ public class DefaultMailActionMessageHandler implements MailActionMessageHandler
 						throw new IllegalStateException(String.format("转换消息失败，msg:%s", msg), e);
 				}
 				handle(openActionDto);
-		}
-
-		@Override
-		public HandlerResult call() throws Exception {
-				handleMessage(inboundMsg);
-				return new HandlerResult(true, inboundMsg.getId());
+				return new HandlerResult(true,msg.getId());
 		}
 
 		private MailOpenActionDto convert(MailTopicMessage topicMessage) {
