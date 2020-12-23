@@ -9,6 +9,7 @@ public class MailTopicMessage extends AbstractEntityAuditable<Long> {
 
 		private MessageTopic topic;
 		private String message;
+		private Boolean locked = false;
 
 		public enum MessageTopic {
 				MAIL_ACTION
@@ -51,5 +52,13 @@ public class MailTopicMessage extends AbstractEntityAuditable<Long> {
 
 		public void setMessage(String message) {
 				this.message = message;
+		}
+
+		public Boolean getLocked() {
+				return locked;
+		}
+
+		public void setLocked(Boolean locked) {
+				this.locked = locked;
 		}
 }

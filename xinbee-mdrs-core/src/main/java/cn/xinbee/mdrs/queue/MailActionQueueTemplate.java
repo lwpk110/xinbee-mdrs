@@ -10,4 +10,6 @@ public interface MailActionQueueTemplate {
 
     boolean isContains(Object prams);
 
+    void ack(boolean success,Long msgId);
+
 }

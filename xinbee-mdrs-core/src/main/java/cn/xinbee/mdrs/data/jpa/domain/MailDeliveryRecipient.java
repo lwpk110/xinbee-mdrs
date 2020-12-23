@@ -22,13 +22,12 @@ public class MailDeliveryRecipient extends AbstractEntity<Long> {
     }
 
     public MailDeliveryRecipient(long id, Collection<MailRecipient> recipients) {
-        this.id = id;
+        this.setId(id);
         this.recipients = JsonUtils.serialize(recipients);
         this.count = CollectionUtils.isEmpty(recipients) ? 0 : recipients.size();
     }
 
     @Id
-    @GeneratedValue
     @Override
     public Long getId() {
         return super.getId();

@@ -37,7 +37,7 @@ spring:
       naming:
         implicit-strategy: cn.xinbee.mdrs.data.jpa.config.CustomImplicitNamingStrategy
       ddl-auto: validate
-      use-new-id-generator-mappings: false
+      use-new-id-generator-mappings: true
   jackson:
     serialization:
       FAIL_ON_EMPTY_BEANS: false

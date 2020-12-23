@@ -8,7 +8,7 @@ CREATE TABLE `r_mail_actions`
     `custom_vars`        varchar(255) DEFAULT NULL,
     `email`              varchar(255) NOT NULL,
     `mailing_id`         varchar(255) DEFAULT NULL,
-    `status`             int(11) NOT NULL,
+    `status`             varchar(11)  NOT NULL,
     `task_id`            varchar(255) NOT NULL,
     PRIMARY KEY (`id`)
 );
@@ -20,5 +20,6 @@ CREATE TABLE `mail_topic_messages`
     `last_modified_date` datetime DEFAULT NULL,
     `message`            longtext,
     `topic`              varchar(255) NOT NULL,
+    `locked`               bit(1)   DEFAULT b'0',
     PRIMARY KEY (`id`)
 );

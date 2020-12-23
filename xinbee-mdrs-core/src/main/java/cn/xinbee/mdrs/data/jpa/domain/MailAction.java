@@ -63,6 +63,7 @@ public class MailAction extends AbstractEntityAuditable<Long> {
     }
 
     @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
     public ActionStatus getStatus() {
         return status;
     }
