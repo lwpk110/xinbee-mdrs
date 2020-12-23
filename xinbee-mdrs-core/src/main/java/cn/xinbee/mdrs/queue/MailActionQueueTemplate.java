@@ -8,8 +8,12 @@ public interface MailActionQueueTemplate {
 
     Message<?> receive(Object prams);
 
+    Message<?> receiveSingle(Object prams);
+
     boolean isContains(Object prams);
 
     void ack(boolean success,Long msgId);
+
+    void recoveryLock(Object prams);
 
 }

@@ -9,6 +9,8 @@ import org.springframework.messaging.Message;
 import org.springframework.messaging.support.MessageBuilder;
 
 import java.util.Map;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
@@ -18,7 +20,6 @@ public class DataSourceMailActionQueueTemplate implements MailActionQueueTemplat
 		public static final String TOPIC_NAME_PARAM = "topic_name";
 		public static final String MESSAGE_ID = "message_id";
 		public static final String MESSAGE_PRE_FETCH = "prefetch_size";
-
 
 
 		private final MailTopicQueueRepository repository;
@@ -34,12 +35,13 @@ public class DataSourceMailActionQueueTemplate implements MailActionQueueTemplat
 		}
 
 		@Override
+		@Transactional(isolation = Isolation.SERIALIZABLE)
 		public Message<?> receive(Object params) {
 				Map<String, Object> queryParam = (Map<String, Object>) params;
 				MailTopicMessage.MessageTopic topic = (MailTopicMessage.MessageTopic) queryParam
 						.get(TOPIC_NAME_PARAM);
 				Object prefetchValue = queryParam.get(MESSAGE_PRE_FETCH);
-				int prefetch =prefetchValue==null ? 10 : (int)prefetchValue;
+				int prefetch = prefetchValue == null ? 10 : (int) prefetchValue;
 				List<MailTopicMessage> topicMessages = repository
 						.findAllByTopicAndLockedFalseOrderByCreatedDateDesc(topic, PageRequest.of(0, prefetch));
 				if (!CollectionUtils.isEmpty(topicMessages)) {
@@ -48,6 +50,23 @@ public class DataSourceMailActionQueueTemplate implements MailActionQueueTemplat
 										Collectors.toList());
 						this.repository.saveAll(lockData);
 						return MessageBuilder.withPayload(lockData)
+								.build();
+				}
+				return null;
+		}
+
+		@Override
+		@Transactional(isolation = Isolation.SERIALIZABLE)
+		public Message<?> receiveSingle(Object prams) {
+				Map<String, Object> queryParam = (Map<String, Object>) prams;
+				MailTopicMessage.MessageTopic topic = (MailTopicMessage.MessageTopic) queryParam
+						.get(TOPIC_NAME_PARAM);
+				MailTopicMessage message = this.repository
+						.findTopByTopicAndLockedFalseOrderByCreatedDateDesc(topic);
+				if (null != message) {
+						message.lockMessage();
+						this.repository.save(message);
+						return MessageBuilder.withPayload(message)
 								.build();
 				}
 				return null;
@@ -64,9 +83,23 @@ public class DataSourceMailActionQueueTemplate implements MailActionQueueTemplat
 		@Override
 		public void ack(boolean success, Long msgId) {
 				if (success) {
-						Assert.notNull(msgId,"msgId can't be null");
+						Assert.notNull(msgId, "msgId can't be null");
 						this.repository.deleteById(msgId);
 				}
+		}
 
+		@Override
+		public void recoveryLock(Object prams) {
+				Map<String, Object> queryParam = (Map<String, Object>) prams;
+				MailTopicMessage.MessageTopic topic = (MailTopicMessage.MessageTopic) queryParam
+						.get(TOPIC_NAME_PARAM);
+				List<MailTopicMessage> lockData = this.repository
+						.findAllByTopicAndLockedTrue(topic);
+				if (!CollectionUtils.isEmpty(lockData)) {
+						List<MailTopicMessage> recoveryList = lockData.stream()
+								.peek(MailTopicMessage::recoveryLock)
+								.collect(Collectors.toList());
+						this.repository.saveAll(recoveryList);
+				}
 		}
 }

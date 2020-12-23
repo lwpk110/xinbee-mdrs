@@ -61,4 +61,12 @@ public class MailTopicMessage extends AbstractEntityAuditable<Long> {
 		public void setLocked(Boolean locked) {
 				this.locked = locked;
 		}
+
+		public void lockMessage(){
+				this.setLocked(true);
+		}
+
+		public void recoveryLock(){
+				this.setLocked(false);
+		}
 }
