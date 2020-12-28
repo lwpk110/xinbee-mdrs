@@ -4,7 +4,6 @@ import static cn.xinbee.mdrs.queue.DataSourceMailActionQueueTemplate.TOPIC_NAME_
 
 import cn.xinbee.mdrs.data.jpa.domain.MailTopicMessage;
 import cn.xinbee.mdrs.data.jpa.domain.MailTopicMessage.MessageTopic;
-import cn.xinbee.mdrs.data.jpa.repository.MailActionRepository;
 import cn.xinbee.mdrs.mail.DefaultMailActionMessageHandler.HandlerResult;
 import cn.xinbee.mdrs.queue.MailActionQueueTemplate;
 import java.util.Collections;
@@ -43,12 +42,12 @@ public class DefaultMailMessageListener implements MailMessageListener, SmartLif
 		@Override
 		public void onMessage(MailTopicMessage queue) {
 				while (hasMsg) {
-						listenMessage();
+						flowPlan();
 				}
 		}
 
 		//流程编排
-		private void listenMessage() {
+		private void flowPlan() {
 				CompletableFuture<? extends Message<?>> cf = CompletableFuture
 						.supplyAsync(this::fetchMessage, executorService);
 				Message<?> message = null;

@@ -20,6 +20,7 @@ CREATE TABLE `mail_delivery_tasks`
 (
     `id`                 bigint(20)   NOT NULL auto_increment,
     `name`               varchar(255) NOT NULL,
+    `channel_ids`        varchar(255) NOT NULL,
     `recipient_count`    int(11)      NOT NULL,
     `status`             varchar(45)  NOT NULL,
     `finished_date`      datetime     DEFAULT NULL,
@@ -54,13 +55,13 @@ CREATE TABLE `mail_delivery_logs`
     `task_id`            bigint(20)   NOT NULL,
     `email`              varchar(255) NOT NULL,
     `status`             varchar(45)  NOT NULL,
-    `invoke_date`        datetime     DEFAULT CURRENT_TIMESTAMP,
+    `invoke_date`        datetime              DEFAULT CURRENT_TIMESTAMP,
     `retry_count`        int(11)      NOT NULL default 0,
-    `template_id`        int(11)      DEFAULT NULL,
-    `subject`            varchar(255) DEFAULT NULL,
-    `channel_id`         int(11)      DEFAULT NULL,
-    `created_date`       datetime     DEFAULT CURRENT_TIMESTAMP,
-    `last_modified_date` datetime     DEFAULT CURRENT_TIMESTAMP,
+    `template_id`        int(11)               DEFAULT NULL,
+    `subject`            varchar(255)          DEFAULT NULL,
+    `channel_id`         int(11)               DEFAULT NULL,
+    `created_date`       datetime              DEFAULT CURRENT_TIMESTAMP,
+    `last_modified_date` datetime              DEFAULT CURRENT_TIMESTAMP,
     `version`            bigint(20)   NOT NULL,
     PRIMARY KEY (`id`) USING BTREE
 );
